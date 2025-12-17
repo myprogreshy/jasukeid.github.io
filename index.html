@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Catatan Penjualan Jagung Susu</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f6f6f6; padding:20px; }
+    h1 { text-align:center; }
+    .container { max-width:700px; margin:auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+    label { display:block; margin-top:10px; font-weight:bold; }
+    select, button { width:100%; padding:10px; margin-top:5px; }
+    button { background:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer; }
+    button:hover { background:#45a049; }
+    table { width:100%; border-collapse:collapse; margin-top:20px; }
+    th, td { border:1px solid #ddd; padding:8px; text-align:center; }
+    th { background:#eee; }
+    .edit { background:#2196F3; color:white; border:none; padding:5px 8px; }
+    .delete { background:#f44336; color:white; border:none; padding:5px 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Penjualan Jagung Susu</h1><label>Pilih Produk</label>
+<select id="produk">
+  <optgroup label="Cup Kecil">
+    <option value="Jasuke full keju - 5000">Jasuke full keju (5k)</option>
+    <option value="Jasuco full coklat - 5000">Jasuco full coklat (5k)</option>
+    <option value="Jasuke mix coklat keju - 7000">Jasuke mix coklat keju (7k)</option>
+    <option value="Jasuke all varian rasa - 8000">Jasuke all varian rasa (8k)</option>
+  </optgroup>
+  <optgroup label="Cup Besar">
+    <option value="Jasuke full keju - 10000">Jasuke full keju (10k)</option>
+    <option value="Jasuco full coklat - 10000">Jasuco full coklat (10k)</option>
+    <option value="Jasuke mix coklat keju - 12000">Jasuke mix coklat keju (12k)</option>
+    <option value="Jasuke all varian rasa - 12000">Jasuke all varian rasa (12k)</option>
+  </optgroup>
+  <optgroup label="Cup Super Besar">
+    <option value="Jasuke full keju - 15000">Jasuke full keju (15k)</option>
+    <option value="Jasuco full coklat - 15000">Jasuco full coklat (15k)</option>
+    <option value="Jasuke mix coklat keju - 17000">Jasuke mix coklat keju (17k)</option>
+    <option value="Jasuke all varian rasa - 17000">Jasuke all varian rasa (17k)</option>
+  </optgroup>
+</select>
+
+<button onclick="tambahData()">Enter</button>
+
+<table>
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Produk</th>
+      <th>Harga</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody id="data"></tbody>
+</table>
+
+  </div>  <script>
+    let penjualan = JSON.parse(localStorage.getItem('penjualanJagung')) || [];
+
+    function render() {
+      const tbody = document.getElementById('data');
+      tbody.innerHTML = '';
+      penjualan.forEach((item, index) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${item.nama}</td>
+            <td>Rp${item.harga}</td>
+            <td>
+              <button class="edit" onclick="editData(${index})">Edit</button>
+              <button class="delete" onclick="hapusData(${index})">Hapus</button>
+            </td>
+          </tr>`;
+      });
+      localStorage.setItem('penjualanJagung', JSON.stringify(penjualan));
+    }
+
+    function tambahData() {
+      const value = document.getElementById('produk').value;
+      const split = value.split(' - ');
+      penjualan.push({ nama: split[0], harga: split[1] });
+      render();
+    }
+
+    function hapusData(index) {
+      penjualan.splice(index, 1);
+      render();
+    }
+
+    function editData(index) {
+      const namaBaru = prompt('Nama produk', penjualan[index].nama);
+      const hargaBaru = prompt('Harga', penjualan[index].harga);
+      if (namaBaru && hargaBaru) {
+        penjualan[index] = { nama: namaBaru, harga: hargaBaru };
+        render();
+      }
+    }
+
+    render();
+  </script></body>
+</html>

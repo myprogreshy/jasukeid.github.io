@@ -3,154 +3,419 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Catatan Penjualan Jagung Susu</title>
+  <title>Jagung Susu Manis - Penjualan</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+    
     body {
-      font-family: Arial, sans-serif;
-      background:#f6f6f6;
-      margin:0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f9f7f0 0%, #fff5e6 100%);
+      margin: 0;
+      padding: 10px;
+      min-height: 100vh;
     }
-    h1 { text-align:center; font-size:22px; margin:10px 0; }
-    h2 { margin-top:25px; font-size:18px; }
-
+    
     .container {
-      max-width:420px;
-      margin:auto;
-      background:#fff;
-      min-height:100vh;
-      padding:12px;
+      max-width: 450px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(255, 152, 0, 0.15);
+      overflow: hidden;
+      padding-bottom: 20px;
+      border: 1px solid #ffd699;
     }
-
-    .total-box{
-      background:#4CAF50;
-      color:white;
-      text-align:center;
-      padding:12px;
-      border-radius:14px;
-      font-size:18px;
-      font-weight:bold;
-      margin-bottom:10px;
+    
+    .header {
+      background: linear-gradient(135deg, #FF9800 0%, #FFB74D 100%);
+      color: white;
+      padding: 20px 15px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
     }
-
+    
+    .header:before {
+      content: "🌽";
+      font-size: 40px;
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      opacity: 0.3;
+    }
+    
+    .header:after {
+      content: "🌽";
+      font-size: 40px;
+      position: absolute;
+      bottom: 10px;
+      right: 20px;
+      opacity: 0.3;
+    }
+    
+    h1 {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-top: 5px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .total-box {
+      background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+      color: white;
+      text-align: center;
+      padding: 18px 15px;
+      border-radius: 16px;
+      font-size: 22px;
+      font-weight: bold;
+      margin: 20px 15px;
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .total-label {
+      font-size: 16px;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+    
+    .total-amount {
+      font-size: 26px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    
+    .section {
+      margin: 0 15px 20px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #E65100;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px dashed #FFCC80;
+      display: flex;
+      align-items: center;
+    }
+    
+    .section-title:before {
+      content: "📦";
+      margin-right: 10px;
+      font-size: 20px;
+    }
+    
+    .cup-small .section-title:before { content: "🥤"; }
+    .cup-medium .section-title:before { content: "🥤🥤"; }
+    .cup-large .section-title:before { content: "🥤🥤🥤"; }
+    
     .grid {
-      display:grid;
-      grid-template-columns:repeat(2, 1fr);
-      gap:10px;
-      margin-top:10px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
     }
-
+    
     .item-btn {
-      padding:18px 10px;
-      background:#fff;
-      border:2px solid #4CAF50;
-      border-radius:14px;
-      font-size:14px;
-      font-weight:bold;
+      padding: 18px 10px;
+      background: white;
+      border: 2px solid #FFB74D;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #5D4037;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 8px rgba(255, 152, 0, 0.1);
+      position: relative;
+      overflow: hidden;
     }
-    .item-btn:active { background:#4CAF50; color:white; }
-
-    .action-bar{
-      display:flex;
-      gap:10px;
-      margin-top:15px;
+    
+    .item-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 152, 0, 0.2);
     }
-    .clear {
-      flex:1;
-      background:#f44336;
-      color:white;
-      border:none;
-      padding:12px;
-      border-radius:12px;
-      font-weight:bold;
+    
+    .item-btn:active {
+      transform: translateY(0);
     }
-    .undo {
-      flex:1;
-      background:#FF9800;
-      color:white;
-      border:none;
-      padding:12px;
-      border-radius:12px;
-      font-weight:bold;
+    
+    .item-btn .item-name {
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #333;
     }
-
+    
+    .item-btn .item-price {
+      font-size: 16px;
+      color: #4CAF50;
+      font-weight: 700;
+    }
+    
+    .item-btn.full-keju { background-color: #FFF3E0; border-color: #FF9800; }
+    .item-btn.full-coklat { background-color: #EFEBE9; border-color: #8D6E63; }
+    .item-btn.mix { background-color: #FFF8E1; border-color: #FFB300; }
+    .item-btn.all-varian { background-color: #E8F5E9; border-color: #66BB6A; }
+    
+    .action-bar {
+      display: flex;
+      gap: 12px;
+      margin: 25px 15px 20px;
+    }
+    
+    .action-btn {
+      flex: 1;
+      border: none;
+      padding: 16px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .action-btn:active {
+      transform: scale(0.98);
+    }
+    
+    .clear-btn {
+      background: linear-gradient(135deg, #f44336 0%, #ef5350 100%);
+      color: white;
+    }
+    
+    .undo-btn {
+      background: linear-gradient(135deg, #FF9800 0%, #FFB74D 100%);
+      color: white;
+    }
+    
+    .table-container {
+      margin: 0 15px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      border: 1px solid #eee;
+    }
+    
     table {
-      width:100%;
-      border-collapse:collapse;
-      margin-top:20px;
-      font-size:13px;
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
     }
-    th, td {
-      border:1px solid #ddd;
-      padding:6px;
-      text-align:center;
+    
+    thead {
+      background: linear-gradient(135deg, #5D4037 0%, #8D6E63 100%);
+      color: white;
     }
-    th { background:#eee; }
-
-    .edit {
-      background:#2196F3;
-      color:white;
-      border:none;
-      padding:4px 6px;
-      border-radius:6px;
-      font-size:12px;
+    
+    th {
+      padding: 14px 8px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 14px;
     }
-    .delete {
-      background:#f44336;
-      color:white;
-      border:none;
-      padding:4px 6px;
-      border-radius:6px;
-      font-size:12px;
+    
+    td {
+      padding: 12px 8px;
+      text-align: center;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #FFF9F0;
+    }
+    
+    .action-cell {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+    
+    .edit-btn, .delete-btn {
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .edit-btn {
+      background-color: #2196F3;
+      color: white;
+    }
+    
+    .delete-btn {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .edit-btn:hover, .delete-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    .no-data {
+      text-align: center;
+      padding: 30px;
+      color: #999;
+      font-style: italic;
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #999;
+      font-size: 12px;
+      padding: 0 15px;
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        margin: 0 auto;
+        border-radius: 20px;
+      }
+      
+      .grid {
+        gap: 10px;
+      }
+      
+      .item-btn {
+        padding: 15px 8px;
+      }
+      
+      .action-btn {
+        padding: 14px;
+        font-size: 15px;
+      }
     }
   </style>
 </head>
 <body>
 <div class="container">
 
-<h1>Penjualan Jagung Susu</h1>
-
-<div id="totalBox" class="total-box">Total: Rp0</div>
-
-<h2>Cup Kecil</h2>
-<div class="grid">
-  <button class="item-btn" onclick="tambahData('Jasuke full keju',5000)">Jasuke Full Keju<br>Rp5.000</button>
-  <button class="item-btn" onclick="tambahData('Jasuco full coklat',5000)">Jasuco Full Coklat<br>Rp5.000</button>
-  <button class="item-btn" onclick="tambahData('Jasuke mix coklat keju',7000)">Mix Coklat Keju<br>Rp7.000</button>
-  <button class="item-btn" onclick="tambahData('Jasuke all varian rasa',8000)">All Varian Rasa<br>Rp8.000</button>
+<div class="header">
+  <h1>Jagung Susu Manis</h1>
+  <div class="subtitle">Catatan Penjualan Harian 🌽</div>
 </div>
 
-<h2>Cup Sedang</h2>
-<div class="grid">
-  <button class="item-btn" onclick="tambahData('Jasuke full keju',10000)">Jasuke Full Keju<br>Rp10.000</button>
-  <button class="item-btn" onclick="tambahData('Jasuco full coklat',10000)">Jasuco Full Coklat<br>Rp10.000</button>
-  <button class="item-btn" onclick="tambahData('Jasuke mix coklat keju',12000)">Mix Coklat Keju<br>Rp12.000</button>
-  <button class="item-btn" onclick="tambahData('Jasuke all varian rasa',12000)">All Varian Rasa<br>Rp12.000</button>
+<div class="total-box">
+  <div class="total-label">TOTAL PENJUALAN</div>
+  <div id="totalAmount" class="total-amount">Rp0</div>
 </div>
 
-<h2>Cup Super Besar</h2>
-<div class="grid">
-  <button class="item-btn" onclick="tambahData('Jasuke full keju',15000)">Jasuke Full Keju<br>Rp15.000</button>
-  <button class="item-btn" onclick="tambahData('Jasuco full coklat',15000)">Jasuco Full Coklat<br>Rp15.000</button>
-  <button class="item-btn" onclick="tambahData('Jasuke mix coklat keju',17000)">Mix Coklat Keju<br>Rp17.000</button>
-  <button class="item-btn" onclick="tambahData('Jasuke all varian rasa',17000)">All Varian Rasa<br>Rp17.000</button>
+<div class="section cup-small">
+  <div class="section-title">Cup Kecil</div>
+  <div class="grid">
+    <button class="item-btn full-keju" onclick="tambahData('Jasuke full keju',5000)">
+      <div class="item-name">Jasuke Full Keju</div>
+      <div class="item-price">Rp5.000</div>
+    </button>
+    <button class="item-btn full-coklat" onclick="tambahData('Jasuco full coklat',5000)">
+      <div class="item-name">Jasuco Full Coklat</div>
+      <div class="item-price">Rp5.000</div>
+    </button>
+    <button class="item-btn mix" onclick="tambahData('Jasuke mix coklat keju',7000)">
+      <div class="item-name">Mix Coklat Keju</div>
+      <div class="item-price">Rp7.000</div>
+    </button>
+    <button class="item-btn all-varian" onclick="tambahData('Jasuke all varian rasa',8000)">
+      <div class="item-name">All Varian Rasa</div>
+      <div class="item-price">Rp8.000</div>
+    </button>
+  </div>
+</div>
+
+<div class="section cup-medium">
+  <div class="section-title">Cup Sedang</div>
+  <div class="grid">
+    <button class="item-btn full-keju" onclick="tambahData('Jasuke full keju',10000)">
+      <div class="item-name">Jasuke Full Keju</div>
+      <div class="item-price">Rp10.000</div>
+    </button>
+    <button class="item-btn full-coklat" onclick="tambahData('Jasuco full coklat',10000)">
+      <div class="item-name">Jasuco Full Coklat</div>
+      <div class="item-price">Rp10.000</div>
+    </button>
+    <button class="item-btn mix" onclick="tambahData('Jasuke mix coklat keju',12000)">
+      <div class="item-name">Mix Coklat Keju</div>
+      <div class="item-price">Rp12.000</div>
+    </button>
+    <button class="item-btn all-varian" onclick="tambahData('Jasuke all varian rasa',12000)">
+      <div class="item-name">All Varian Rasa</div>
+      <div class="item-price">Rp12.000</div>
+    </button>
+  </div>
+</div>
+
+<div class="section cup-large">
+  <div class="section-title">Cup Super Besar</div>
+  <div class="grid">
+    <button class="item-btn full-keju" onclick="tambahData('Jasuke full keju',15000)">
+      <div class="item-name">Jasuke Full Keju</div>
+      <div class="item-price">Rp15.000</div>
+    </button>
+    <button class="item-btn full-coklat" onclick="tambahData('Jasuco full coklat',15000)">
+      <div class="item-name">Jasuco Full Coklat</div>
+      <div class="item-price">Rp15.000</div>
+    </button>
+    <button class="item-btn mix" onclick="tambahData('Jasuke mix coklat keju',17000)">
+      <div class="item-name">Mix Coklat Keju</div>
+      <div class="item-price">Rp17.000</div>
+    </button>
+    <button class="item-btn all-varian" onclick="tambahData('Jasuke all varian rasa',17000)">
+      <div class="item-name">All Varian Rasa</div>
+      <div class="item-price">Rp17.000</div>
+    </button>
+  </div>
 </div>
 
 <div class="action-bar">
-  <button class="clear" onclick="clearAll()">🗑️ Clear All</button>
-  <button class="undo" onclick="undo()">↩️ Undo</button>
+  <button class="action-btn clear-btn" onclick="clearAll()">
+    <span>🗑️</span> Hapus Semua
+  </button>
+  <button class="action-btn undo-btn" onclick="undo()">
+    <span>↩️</span> Undo
+  </button>
 </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>No</th>
-      <th>Produk</th>
-      <th>Harga</th>
-      <th>Aksi</th>
-    </tr>
-  </thead>
-  <tbody id="data"></tbody>
-</table>
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Produk</th>
+        <th>Harga</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="data">
+      <!-- Data akan dimasukkan di sini oleh JavaScript -->
+    </tbody>
+  </table>
+</div>
+
+<div class="footer">
+  Catatan tersimpan otomatis di browser | © Jagung Susu Manis
+</div>
 
 </div>
 
@@ -163,26 +428,43 @@
     if (history.length > 10) history.shift();
   }
 
+  function formatRupiah(angka) {
+    return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
   function render() {
     const tbody = document.getElementById('data');
     let total = 0;
-    tbody.innerHTML = '';
-
-    penjualan.forEach((item, index) => {
-      total += Number(item.harga);
-      tbody.innerHTML += `
+    
+    if (penjualan.length === 0) {
+      tbody.innerHTML = `
         <tr>
-          <td>${index + 1}</td>
-          <td>${item.nama}</td>
-          <td>Rp${item.harga}</td>
-          <td>
-            <button class="edit" onclick="editData(${index})">Edit</button>
-            <button class="delete" onclick="hapusData(${index})">Hapus</button>
+          <td colspan="4" class="no-data">
+            Belum ada data penjualan.<br>
+            Klik produk di atas untuk memulai.
           </td>
         </tr>`;
-    });
+    } else {
+      tbody.innerHTML = '';
+      
+      penjualan.forEach((item, index) => {
+        total += Number(item.harga);
+        tbody.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${item.nama}</td>
+            <td>Rp${formatRupiah(item.harga)}</td>
+            <td>
+              <div class="action-cell">
+                <button class="edit-btn" onclick="editData(${index})">Edit</button>
+                <button class="delete-btn" onclick="hapusData(${index})">Hapus</button>
+              </div>
+            </td>
+          </tr>`;
+      });
+    }
 
-    document.getElementById('totalBox').innerText = 'Total: Rp' + total;
+    document.getElementById('totalAmount').innerText = 'Rp' + formatRupiah(total);
     localStorage.setItem('penjualanJagung', JSON.stringify(penjualan));
   }
 
@@ -190,6 +472,10 @@
     simpanHistory();
     penjualan.push({ nama, harga });
     render();
+    
+    // Efek visual feedback
+    const event = new CustomEvent('productAdded', { detail: { nama, harga } });
+    document.dispatchEvent(event);
   }
 
   function hapusData(index) {
@@ -200,15 +486,20 @@
 
   function editData(index) {
     simpanHistory();
-    const namaBaru = prompt('Nama produk', penjualan[index].nama);
-    const hargaBaru = prompt('Harga', penjualan[index].harga);
+    const namaBaru = prompt('Nama produk:', penjualan[index].nama);
+    const hargaBaru = prompt('Harga:', penjualan[index].harga);
     if (namaBaru && hargaBaru) {
-      penjualan[index] = { nama: namaBaru, harga: hargaBaru };
+      penjualan[index] = { nama: namaBaru, harga: Number(hargaBaru) };
       render();
     }
   }
 
   function clearAll() {
+    if (penjualan.length === 0) {
+      alert('Tidak ada data untuk dihapus');
+      return;
+    }
+    
     if (confirm('Yakin ingin menghapus SEMUA catatan penjualan?')) {
       simpanHistory();
       penjualan = [];
@@ -225,6 +516,17 @@
     }
   }
 
+  // Animasi sederhana untuk total saat berubah
+  let lastTotal = 0;
+  document.addEventListener('productAdded', function() {
+    const totalBox = document.querySelector('.total-box');
+    totalBox.style.transform = 'scale(1.05)';
+    setTimeout(() => {
+      totalBox.style.transform = 'scale(1)';
+    }, 200);
+  });
+
+  // Inisialisasi
   render();
 </script>
 </body>

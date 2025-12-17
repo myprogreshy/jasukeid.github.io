@@ -5,12 +5,19 @@
   <style>
     body { font-family: Arial, sans-serif; background:#f6f6f6; padding:20px; }
     h1 { text-align:center; }
-    .container { max-width:700px; margin:auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
-    label { display:block; margin-top:10px; font-weight:bold; }
-    select, button { width:100%; padding:10px; margin-top:5px; }
-    button { background:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer; }
-    button:hover { background:#45a049; }
-    table { width:100%; border-collapse:collapse; margin-top:20px; }
+    h2 { margin-top:30px; }
+    .container { max-width:800px; margin:auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:12px; margin-top:10px; }
+    .item-btn {
+      padding:15px;
+      background:#fafafa;
+      border:2px solid #4CAF50;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:14px;
+    }
+    .item-btn:hover { background:#4CAF50; color:white; }
+    table { width:100%; border-collapse:collapse; margin-top:30px; }
     th, td { border:1px solid #ddd; padding:8px; text-align:center; }
     th { background:#eee; }
     .edit { background:#2196F3; color:white; border:none; padding:5px 8px; }
@@ -19,29 +26,29 @@
 </head>
 <body>
   <div class="container">
-    <h1>Penjualan Jagung Susu</h1><label>Pilih Produk</label>
-<select id="produk">
-  <optgroup label="Cup Kecil">
-    <option value="Jasuke full keju - 5000">Jasuke full keju (5k)</option>
-    <option value="Jasuco full coklat - 5000">Jasuco full coklat (5k)</option>
-    <option value="Jasuke mix coklat keju - 7000">Jasuke mix coklat keju (7k)</option>
-    <option value="Jasuke all varian rasa - 8000">Jasuke all varian rasa (8k)</option>
-  </optgroup>
-  <optgroup label="Cup Besar">
-    <option value="Jasuke full keju - 10000">Jasuke full keju (10k)</option>
-    <option value="Jasuco full coklat - 10000">Jasuco full coklat (10k)</option>
-    <option value="Jasuke mix coklat keju - 12000">Jasuke mix coklat keju (12k)</option>
-    <option value="Jasuke all varian rasa - 12000">Jasuke all varian rasa (12k)</option>
-  </optgroup>
-  <optgroup label="Cup Super Besar">
-    <option value="Jasuke full keju - 15000">Jasuke full keju (15k)</option>
-    <option value="Jasuco full coklat - 15000">Jasuco full coklat (15k)</option>
-    <option value="Jasuke mix coklat keju - 17000">Jasuke mix coklat keju (17k)</option>
-    <option value="Jasuke all varian rasa - 17000">Jasuke all varian rasa (17k)</option>
-  </optgroup>
-</select>
+    <h1>Penjualan Jagung Susu</h1><h2>Cup Kecil</h2>
+<div class="grid">
+  <button class="item-btn" onclick="tambahData('Jasuke full keju',5000)">Jasuke Full Keju<br>Rp5.000</button>
+  <button class="item-btn" onclick="tambahData('Jasuco full coklat',5000)">Jasuco Full Coklat<br>Rp5.000</button>
+  <button class="item-btn" onclick="tambahData('Jasuke mix coklat keju',7000)">Mix Coklat Keju<br>Rp7.000</button>
+  <button class="item-btn" onclick="tambahData('Jasuke all varian rasa',8000)">All Varian Rasa<br>Rp8.000</button>
+</div>
 
-<button onclick="tambahData()">Enter</button>
+<h2>Cup Sedang</h2>
+<div class="grid">
+  <button class="item-btn" onclick="tambahData('Jasuke full keju',10000)">Jasuke Full Keju<br>Rp10.000</button>
+  <button class="item-btn" onclick="tambahData('Jasuco full coklat',10000)">Jasuco Full Coklat<br>Rp10.000</button>
+  <button class="item-btn" onclick="tambahData('Jasuke mix coklat keju',12000)">Mix Coklat Keju<br>Rp12.000</button>
+  <button class="item-btn" onclick="tambahData('Jasuke all varian rasa',12000)">All Varian Rasa<br>Rp12.000</button>
+</div>
+
+<h2>Cup Super Besar</h2>
+<div class="grid">
+  <button class="item-btn" onclick="tambahData('Jasuke full keju',15000)">Jasuke Full Keju<br>Rp15.000</button>
+  <button class="item-btn" onclick="tambahData('Jasuco full coklat',15000)">Jasuco Full Coklat<br>Rp15.000</button>
+  <button class="item-btn" onclick="tambahData('Jasuke mix coklat keju',17000)">Mix Coklat Keju<br>Rp17.000</button>
+  <button class="item-btn" onclick="tambahData('Jasuke all varian rasa',17000)">All Varian Rasa<br>Rp17.000</button>
+</div>
 
 <table>
   <thead>
@@ -76,10 +83,8 @@
       localStorage.setItem('penjualanJagung', JSON.stringify(penjualan));
     }
 
-    function tambahData() {
-      const value = document.getElementById('produk').value;
-      const split = value.split(' - ');
-      penjualan.push({ nama: split[0], harga: split[1] });
+    function tambahData(nama, harga) {
+      penjualan.push({ nama, harga });
       render();
     }
 

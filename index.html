@@ -67,10 +67,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Penjualan Jagung Susu</h1>
-    <div id="totalBox" style="background:#4CAF50;color:white;padding:12px;border-radius:12px;text-align:center;font-size:18px;font-weight:bold;">
-      Total: Rp0
-    </div><h2>Cup Kecil</h2>
+    <h1>Penjualan Jagung Susu</h1><h2>Cup Kecil</h2>
 <div class="grid">
   <button class="item-btn" onclick="tambahData('Jasuke full keju',5000)">Jasuke Full Keju<br>Rp5.000</button>
   <button class="item-btn" onclick="tambahData('Jasuco full coklat',5000)">Jasuco Full Coklat<br>Rp5.000</button>
@@ -110,11 +107,9 @@
     let penjualan = JSON.parse(localStorage.getItem('penjualanJagung')) || [];
 
     function render() {
-      let total = 0;
       const tbody = document.getElementById('data');
       tbody.innerHTML = '';
       penjualan.forEach((item, index) => {
-        total += Number(item.harga);((item, index) => {
         tbody.innerHTML += `
           <tr>
             <td>${index + 1}</td>
@@ -127,7 +122,6 @@
           </tr>`;
       });
       localStorage.setItem('penjualanJagung', JSON.stringify(penjualan));
-      document.getElementById('totalBox').innerText = 'Total: Rp' + total;
     }
 
     function tambahData(nama, harga) {

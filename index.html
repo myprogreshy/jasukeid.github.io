@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -7,11 +8,11 @@
     body {
       font-family: Arial, sans-serif;
       background:#f6f6f6;
-      padding:0;
       margin:0;
     }
     h1 { text-align:center; font-size:22px; margin:10px 0; }
     h2 { margin-top:25px; font-size:18px; }
+
     .container {
       max-width:420px;
       margin:auto;
@@ -19,26 +20,63 @@
       min-height:100vh;
       padding:12px;
     }
+
+    .total-box{
+      background:#4CAF50;
+      color:white;
+      text-align:center;
+      padding:12px;
+      border-radius:14px;
+      font-size:18px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
     .grid {
       display:grid;
       grid-template-columns:repeat(2, 1fr);
       gap:10px;
       margin-top:10px;
     }
+
     .item-btn {
       padding:18px 10px;
-      background:#ffffff;
+      background:#fff;
       border:2px solid #4CAF50;
       border-radius:14px;
-      cursor:pointer;
       font-size:14px;
       font-weight:bold;
     }
     .item-btn:active { background:#4CAF50; color:white; }
+
+    .action-bar{
+      display:flex;
+      gap:10px;
+      margin-top:15px;
+    }
+    .clear {
+      flex:1;
+      background:#f44336;
+      color:white;
+      border:none;
+      padding:12px;
+      border-radius:12px;
+      font-weight:bold;
+    }
+    .undo {
+      flex:1;
+      background:#FF9800;
+      color:white;
+      border:none;
+      padding:12px;
+      border-radius:12px;
+      font-weight:bold;
+    }
+
     table {
       width:100%;
       border-collapse:collapse;
-      margin-top:25px;
+      margin-top:20px;
       font-size:13px;
     }
     th, td {
@@ -47,6 +85,7 @@
       text-align:center;
     }
     th { background:#eee; }
+
     .edit {
       background:#2196F3;
       color:white;
@@ -66,8 +105,13 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Penjualan Jagung Susu</h1><h2>Cup Kecil</h2>
+<div class="container">
+
+<h1>Penjualan Jagung Susu</h1>
+
+<div id="totalBox" class="total-box">Total: Rp0</div>
+
+<h2>Cup Kecil</h2>
 <div class="grid">
   <button class="item-btn" onclick="tambahData('Jasuke full keju',5000)">Jasuke Full Keju<br>Rp5.000</button>
   <button class="item-btn" onclick="tambahData('Jasuco full coklat',5000)">Jasuco Full Coklat<br>Rp5.000</button>
@@ -91,6 +135,11 @@
   <button class="item-btn" onclick="tambahData('Jasuke all varian rasa',17000)">All Varian Rasa<br>Rp17.000</button>
 </div>
 
+<div class="action-bar">
+  <button class="clear" onclick="clearAll()">🗑️ Clear All</button>
+  <button class="undo" onclick="undo()">↩️ Undo</button>
+</div>
+
 <table>
   <thead>
     <tr>
@@ -103,46 +152,80 @@
   <tbody id="data"></tbody>
 </table>
 
-  </div>  <script>
-    let penjualan = JSON.parse(localStorage.getItem('penjualanJagung')) || [];
+</div>
 
-    function render() {
-      const tbody = document.getElementById('data');
-      tbody.innerHTML = '';
-      penjualan.forEach((item, index) => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${index + 1}</td>
-            <td>${item.nama}</td>
-            <td>Rp${item.harga}</td>
-            <td>
-              <button class="edit" onclick="editData(${index})">Edit</button>
-              <button class="delete" onclick="hapusData(${index})">Hapus</button>
-            </td>
-          </tr>`;
-      });
-      localStorage.setItem('penjualanJagung', JSON.stringify(penjualan));
-    }
+<script>
+  let penjualan = JSON.parse(localStorage.getItem('penjualanJagung')) || [];
+  let history = [];
 
-    function tambahData(nama, harga) {
-      penjualan.push({ nama, harga });
-      render();
-    }
+  function simpanHistory() {
+    history.push(JSON.stringify(penjualan));
+    if (history.length > 10) history.shift();
+  }
 
-    function hapusData(index) {
-      penjualan.splice(index, 1);
-      render();
-    }
+  function render() {
+    const tbody = document.getElementById('data');
+    let total = 0;
+    tbody.innerHTML = '';
 
-    function editData(index) {
-      const namaBaru = prompt('Nama produk', penjualan[index].nama);
-      const hargaBaru = prompt('Harga', penjualan[index].harga);
-      if (namaBaru && hargaBaru) {
-        penjualan[index] = { nama: namaBaru, harga: hargaBaru };
-        render();
-      }
-    }
+    penjualan.forEach((item, index) => {
+      total += Number(item.harga);
+      tbody.innerHTML += `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${item.nama}</td>
+          <td>Rp${item.harga}</td>
+          <td>
+            <button class="edit" onclick="editData(${index})">Edit</button>
+            <button class="delete" onclick="hapusData(${index})">Hapus</button>
+          </td>
+        </tr>`;
+    });
 
+    document.getElementById('totalBox').innerText = 'Total: Rp' + total;
+    localStorage.setItem('penjualanJagung', JSON.stringify(penjualan));
+  }
+
+  function tambahData(nama, harga) {
+    simpanHistory();
+    penjualan.push({ nama, harga });
     render();
-  </script></body>
+  }
+
+  function hapusData(index) {
+    simpanHistory();
+    penjualan.splice(index, 1);
+    render();
+  }
+
+  function editData(index) {
+    simpanHistory();
+    const namaBaru = prompt('Nama produk', penjualan[index].nama);
+    const hargaBaru = prompt('Harga', penjualan[index].harga);
+    if (namaBaru && hargaBaru) {
+      penjualan[index] = { nama: namaBaru, harga: hargaBaru };
+      render();
+    }
+  }
+
+  function clearAll() {
+    if (confirm('Yakin ingin menghapus SEMUA catatan penjualan?')) {
+      simpanHistory();
+      penjualan = [];
+      render();
+    }
+  }
+
+  function undo() {
+    if (history.length > 0) {
+      penjualan = JSON.parse(history.pop());
+      render();
+    } else {
+      alert('Tidak ada data untuk di-undo');
+    }
+  }
+
+  render();
+</script>
+</body>
 </html>

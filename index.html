@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Kasir Jagung Susu</title>
+<title>Kasir Jasuke.id</title>
 
 <style>
 body{font-family:Arial;background:#f6f6f6;margin:0}
@@ -27,8 +27,37 @@ h2{margin-top:20px;font-size:18px}
 .item-btn:active{background:#4CAF50;color:white}
 
 .action-bar{display:flex;gap:10px;margin-top:15px}
-.clear{flex:1;background:#f44336;color:white;border:none;padding:12px;border-radius:12px;font-weight:bold}
-.undo{flex:1;background:#FF9800;color:white;border:none;padding:12px;border-radius:12px;font-weight:bold}
+.action-bar button{
+  flex:1;
+  background:#eee;
+  border:1px solid #ccc;
+  padding:12px;
+  border-radius:12px;
+  font-weight:bold;
+}
+
+.cart-list{
+  background:#f1f1f1;
+  border-radius:12px;
+  padding:10px;
+  font-size:14px;
+}
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px dashed #ccc;
+  padding:4px 0;
+}
+
+.undo-btn{
+  margin-top:8px;
+  width:100%;
+  background:#f9f9f9;
+  border:1px dashed #999;
+  padding:10px;
+  border-radius:10px;
+  font-weight:bold;
+}
 
 table{width:100%;border-collapse:collapse;margin-top:20px;font-size:12px}
 th,td{border:1px solid #ddd;padding:6px;text-align:center}
@@ -39,7 +68,7 @@ th{background:#eee}
 <body>
 <div class="container">
 
-<h1>Kasir Jagung Susu</h1>
+<h1>Kasir Jasuke.id</h1>
 
 <div id="totalBox" class="total-box">Total Masuk: Rp0</div>
 
@@ -68,24 +97,25 @@ th{background:#eee}
 </div>
 
 <h2>Keranjang Pembeli</h2>
-<div id="cartBox" class="total-box" style="background:#2196F3">Total: Rp0</div>
+<div class="cart-list" id="cartList">Belum ada pesanan</div>
 
+<button class="undo-btn" onclick="undoKeranjang()">↩️ Undo Pesanan Terakhir</button>
+
+<div id="cartTotal" class="total-box" style="background:#2196F3;margin-top:10px">Total: Rp0</div>
+
+<!-- OPSI UANG PEMBELI -->
 <div class="grid">
 <button class="item-btn" onclick="setBayar(0)">Uang Pas</button>
 <button class="item-btn" onclick="setBayar(10000)">Rp10.000</button>
 <button class="item-btn" onclick="setBayar(20000)">Rp20.000</button>
 <button class="item-btn" onclick="setBayar(50000)">Rp50.000</button>
 <button class="item-btn" onclick="setBayar(100000)">Rp100.000</button>
+<button class="item-btn" onclick="setBayarLain()">Lainnya</button>
 </div>
 
 <div class="action-bar">
-<button class="undo" onclick="hitungKembalian()">💰 Hitung</button>
-<button class="clear" onclick="simpanTransaksi()">✔ Simpan</button>
-</div>
-
-<div class="action-bar">
-<button class="clear" onclick="clearAll()">🗑️ Clear All</button>
-<button class="undo" onclick="undo()">↩️ Undo</button>
+<button onclick="clearAll()">Clear All</button>
+<button onclick="simpanTransaksi()">Simpan</button>
 </div>
 
 <table>
@@ -106,40 +136,77 @@ th{background:#eee}
 <script>
 let transaksi = JSON.parse(localStorage.getItem('kasirJagung')) || [];
 let keranjang = [];
-let history = [];
+let historyKeranjang = [];
 let uangPembeli = 0;
 
+function simpanHistory(){
+  historyKeranjang.push(JSON.stringify(keranjang));
+}
+
 function tambahItem(nama,harga){
+  simpanHistory();
   keranjang.push({nama,harga});
   renderKeranjang();
 }
 
+function undoKeranjang(){
+  if(historyKeranjang.length){
+    keranjang = JSON.parse(historyKeranjang.pop());
+    renderKeranjang();
+  }else{
+    alert('Tidak ada yang bisa di-undo');
+  }
+}
+
 function renderKeranjang(){
-  let total = keranjang.reduce((a,b)=>a+b.harga,0);
-  document.getElementById('cartBox').innerText='Total: Rp'+total;
+  const list = document.getElementById('cartList');
+  if(keranjang.length===0){
+    list.innerHTML='Belum ada pesanan';
+  }else{
+    list.innerHTML = keranjang.map(i =>
+      `<div class="cart-item">
+        <span>${i.nama}</span>
+        <span>Rp${i.harga}</span>
+      </div>`
+    ).join('');
+  }
+  const total = keranjang.reduce((a,b)=>a+b.harga,0);
+  document.getElementById('cartTotal').innerText='Total: Rp'+total;
 }
 
 function setBayar(uang){
-  let total = keranjang.reduce((a,b)=>a+b.harga,0);
+  const total = keranjang.reduce((a,b)=>a+b.harga,0);
   uangPembeli = uang===0 ? total : uang;
 }
 
-function hitungKembalian(){
-  let total = keranjang.reduce((a,b)=>a+b.harga,0);
-  alert('Kembalian: Rp'+(uangPembeli-total));
+function setBayarLain(){
+  const input = prompt('Masukkan uang pembeli (angka saja)');
+  const uang = parseInt(input);
+  if(!isNaN(uang) && uang > 0){
+    uangPembeli = uang;
+  }else{
+    alert('Nominal tidak valid');
+  }
 }
 
 function simpanTransaksi(){
   if(!keranjang.length) return alert('Keranjang kosong');
-  history.push(JSON.stringify(transaksi));
 
-  let total = keranjang.reduce((a,b)=>a+b.harga,0);
+  const total = keranjang.reduce((a,b)=>a+b.harga,0);
+
+  if(uangPembeli < total){
+    alert('Uang pembeli kurang');
+    return;
+  }
+
   transaksi.push({
     menu: keranjang.map(i=>i.nama).join(', '),
-    total, bayar: uangPembeli, kembali: uangPembeli-total
+    total,
+    bayar: uangPembeli,
+    kembali: uangPembeli-total
   });
 
-  keranjang=[]; uangPembeli=0;
+  keranjang=[]; uangPembeli=0; historyKeranjang=[];
   localStorage.setItem('kasirJagung',JSON.stringify(transaksi));
   renderKeranjang(); render();
 }
@@ -166,17 +233,10 @@ function render(){
 
 function clearAll(){
   if(confirm('Hapus semua transaksi?')){
-    history.push(JSON.stringify(transaksi));
     transaksi=[];
+    localStorage.removeItem('kasirJagung');
     render();
   }
-}
-
-function undo(){
-  if(history.length){
-    transaksi=JSON.parse(history.pop());
-    render();
-  } else alert('Tidak ada undo');
 }
 
 render();

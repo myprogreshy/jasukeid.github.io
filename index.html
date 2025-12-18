@@ -2,31 +2,33 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Kasir Jagung Susu</title>
 
 <style>
 body{font-family:Arial;background:#f6f6f6;margin:0}
 .container{max-width:420px;margin:auto;background:#fff;min-height:100vh;padding:12px}
-h1{text-align:center}
-h2{margin-top:20px}
+h1{text-align:center;font-size:22px;margin:10px 0}
+h2{margin-top:20px;font-size:18px}
 
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.btn{padding:16px;border-radius:14px;border:2px solid #4CAF50;background:#fff;font-weight:bold}
-.btn:active{background:#4CAF50;color:#fff}
+.total-box{
+  background:#4CAF50;color:white;text-align:center;
+  padding:12px;border-radius:14px;
+  font-size:18px;font-weight:bold;
+}
 
-.cart{background:#eee;padding:10px;border-radius:10px;margin-top:10px}
-.cart-item{font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
 
-.total{background:#4CAF50;color:#fff;text-align:center;padding:12px;border-radius:14px;font-size:18px;font-weight:bold;margin-top:10px}
+.item-btn{
+  padding:18px 10px;background:#fff;
+  border:2px solid #4CAF50;border-radius:14px;
+  font-size:14px;font-weight:bold;
+}
+.item-btn:active{background:#4CAF50;color:white}
 
-.money{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
-.money button{padding:12px;border:none;border-radius:10px;font-weight:bold;background:#2196F3;color:white}
-
-.action{display:flex;gap:10px;margin-top:10px}
-.action button{flex:1;padding:12px;border:none;border-radius:12px;font-weight:bold}
-.pay{background:#FF9800;color:white}
-.save{background:#4CAF50;color:white}
+.action-bar{display:flex;gap:10px;margin-top:15px}
+.clear{flex:1;background:#f44336;color:white;border:none;padding:12px;border-radius:12px;font-weight:bold}
+.undo{flex:1;background:#FF9800;color:white;border:none;padding:12px;border-radius:12px;font-weight:bold}
 
 table{width:100%;border-collapse:collapse;margin-top:20px;font-size:12px}
 th,td{border:1px solid #ddd;padding:6px;text-align:center}
@@ -39,98 +41,145 @@ th{background:#eee}
 
 <h1>Kasir Jagung Susu</h1>
 
-<h2>Pilih Menu</h2>
+<div id="totalBox" class="total-box">Total Masuk: Rp0</div>
+
+<h2>Cup Kecil</h2>
 <div class="grid">
-<button class="btn" onclick="addItem('Jasuke Full Keju',5000)">Keju 5k</button>
-<button class="btn" onclick="addItem('Jasuco Full Coklat',5000)">Coklat 5k</button>
-<button class="btn" onclick="addItem('Mix Coklat Keju',7000)">Mix 7k</button>
-<button class="btn" onclick="addItem('All Varian',8000)">All 8k</button>
-<button class="btn" onclick="addItem('Keju Besar',10000)">Keju 10k</button>
-<button class="btn" onclick="addItem('Mix Besar',12000)">Mix 12k</button>
+<button class="item-btn" onclick="tambahItem('Jasuke Full Keju',5000)">Keju 5k</button>
+<button class="item-btn" onclick="tambahItem('Jasuco Full Coklat',5000)">Coklat 5k</button>
+<button class="item-btn" onclick="tambahItem('Mix Coklat Keju',7000)">Mix 7k</button>
+<button class="item-btn" onclick="tambahItem('All Varian',8000)">All 8k</button>
 </div>
 
-<div class="cart">
-<b>Keranjang Pembeli</b>
-<div id="cart"></div>
+<h2>Cup Sedang</h2>
+<div class="grid">
+<button class="item-btn" onclick="tambahItem('Jasuke Full Keju',10000)">Keju 10k</button>
+<button class="item-btn" onclick="tambahItem('Jasuco Full Coklat',10000)">Coklat 10k</button>
+<button class="item-btn" onclick="tambahItem('Mix Coklat Keju',12000)">Mix 12k</button>
+<button class="item-btn" onclick="tambahItem('All Varian',12000)">All 12k</button>
 </div>
 
-<div class="total" id="total">Total: Rp0</div>
-
-<h2>Uang Pembeli</h2>
-<div class="money">
-<button onclick="setBayar(0)">Uang Pas</button>
-<button onclick="setBayar(10000)">10k</button>
-<button onclick="setBayar(20000)">20k</button>
-<button onclick="setBayar(50000)">50k</button>
-<button onclick="setBayar(100000)">100k</button>
+<h2>Cup Super Besar</h2>
+<div class="grid">
+<button class="item-btn" onclick="tambahItem('Jasuke Full Keju',15000)">Keju 15k</button>
+<button class="item-btn" onclick="tambahItem('Jasuco Full Coklat',15000)">Coklat 15k</button>
+<button class="item-btn" onclick="tambahItem('Mix Coklat Keju',17000)">Mix 17k</button>
+<button class="item-btn" onclick="tambahItem('All Varian',17000)">All 17k</button>
 </div>
 
-<div class="action">
-<button class="pay" onclick="hitung()">Hitung</button>
-<button class="save" onclick="simpan()">Simpan</button>
+<h2>Keranjang Pembeli</h2>
+<div id="cartBox" class="total-box" style="background:#2196F3">Total: Rp0</div>
+
+<div class="grid">
+<button class="item-btn" onclick="setBayar(0)">Uang Pas</button>
+<button class="item-btn" onclick="setBayar(10000)">Rp10.000</button>
+<button class="item-btn" onclick="setBayar(20000)">Rp20.000</button>
+<button class="item-btn" onclick="setBayar(50000)">Rp50.000</button>
+<button class="item-btn" onclick="setBayar(100000)">Rp100.000</button>
+</div>
+
+<div class="action-bar">
+<button class="undo" onclick="hitungKembalian()">💰 Hitung</button>
+<button class="clear" onclick="simpanTransaksi()">✔ Simpan</button>
+</div>
+
+<div class="action-bar">
+<button class="clear" onclick="clearAll()">🗑️ Clear All</button>
+<button class="undo" onclick="undo()">↩️ Undo</button>
 </div>
 
 <table>
 <thead>
 <tr>
-<th>Menu</th>
+<th>No</th>
+<th>Pesanan</th>
 <th>Total</th>
 <th>Bayar</th>
 <th>Kembali</th>
 </tr>
 </thead>
-<tbody id="riwayat"></tbody>
+<tbody id="data"></tbody>
 </table>
 
 </div>
 
 <script>
-let cart=[], total=0, bayar=0;
-let transaksi = JSON.parse(localStorage.getItem('transaksiJagung')) || [];
+let transaksi = JSON.parse(localStorage.getItem('kasirJagung')) || [];
+let keranjang = [];
+let history = [];
+let uangPembeli = 0;
 
-function addItem(nama,harga){
-  cart.push({nama,harga});
-  total+=harga;
-  renderCart();
+function tambahItem(nama,harga){
+  keranjang.push({nama,harga});
+  renderKeranjang();
 }
 
-function renderCart(){
-  document.getElementById('cart').innerHTML =
-    cart.map(i=>`• ${i.nama} (Rp${i.harga})`).join('<br>');
-  document.getElementById('total').innerText='Total: Rp'+total;
+function renderKeranjang(){
+  let total = keranjang.reduce((a,b)=>a+b.harga,0);
+  document.getElementById('cartBox').innerText='Total: Rp'+total;
 }
 
-function setBayar(n){
-  bayar = n===0 ? total : n;
+function setBayar(uang){
+  let total = keranjang.reduce((a,b)=>a+b.harga,0);
+  uangPembeli = uang===0 ? total : uang;
 }
 
-function hitung(){
-  alert('Kembalian: Rp'+(bayar-total));
+function hitungKembalian(){
+  let total = keranjang.reduce((a,b)=>a+b.harga,0);
+  alert('Kembalian: Rp'+(uangPembeli-total));
 }
 
-function simpan(){
-  if(cart.length===0) return alert('Keranjang kosong');
+function simpanTransaksi(){
+  if(!keranjang.length) return alert('Keranjang kosong');
+  history.push(JSON.stringify(transaksi));
+
+  let total = keranjang.reduce((a,b)=>a+b.harga,0);
   transaksi.push({
-    menu: cart.map(i=>i.nama).join(', '),
-    total, bayar, kembali: bayar-total
+    menu: keranjang.map(i=>i.nama).join(', '),
+    total, bayar: uangPembeli, kembali: uangPembeli-total
   });
-  localStorage.setItem('transaksiJagung',JSON.stringify(transaksi));
-  cart=[]; total=0; bayar=0;
-  renderCart(); renderRiwayat();
+
+  keranjang=[]; uangPembeli=0;
+  localStorage.setItem('kasirJagung',JSON.stringify(transaksi));
+  renderKeranjang(); render();
 }
 
-function renderRiwayat(){
-  document.getElementById('riwayat').innerHTML =
-    transaksi.map(t=>`
+function render(){
+  let tbody=document.getElementById('data');
+  tbody.innerHTML='';
+  let totalMasuk=0;
+
+  transaksi.forEach((t,i)=>{
+    totalMasuk+=t.total;
+    tbody.innerHTML+=`
     <tr>
+      <td>${i+1}</td>
       <td>${t.menu}</td>
       <td>Rp${t.total}</td>
       <td>Rp${t.bayar}</td>
       <td>Rp${t.kembali}</td>
-    </tr>`).join('');
+    </tr>`;
+  });
+
+  document.getElementById('totalBox').innerText='Total Masuk: Rp'+totalMasuk;
 }
 
-renderRiwayat();
+function clearAll(){
+  if(confirm('Hapus semua transaksi?')){
+    history.push(JSON.stringify(transaksi));
+    transaksi=[];
+    render();
+  }
+}
+
+function undo(){
+  if(history.length){
+    transaksi=JSON.parse(history.pop());
+    render();
+  } else alert('Tidak ada undo');
+}
+
+render();
 </script>
 </body>
 </html>

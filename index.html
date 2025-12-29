@@ -11,57 +11,99 @@ body{font-family:Arial;background:#f6f6f6;margin:0}
 h1{text-align:center;font-size:22px;margin:10px 0}
 h2{margin-top:20px;font-size:18px}
 
+/* TOTAL */
 .total-box{
   background:#4CAF50;color:white;text-align:center;
   padding:12px;border-radius:14px;
   font-size:18px;font-weight:bold;
 }
 
+/* GRID */
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
 
+/* TOMBOL UMUM */
 .item-btn{
-  padding:18px 10px;background:#fff;
-  border:2px solid #4CAF50;border-radius:14px;
-  font-size:14px;font-weight:bold;
+  padding:18px 10px;
+  border-radius:14px;
+  font-size:14px;
+  font-weight:bold;
+  border:2px solid #ccc;
+  background:#fff;
 }
-.item-btn:active{background:#4CAF50;color:white}
+.item-btn:active{opacity:.85}
 
+/* WARNA CUP */
+.keju{
+  background:#FFF3B0;
+  border-color:#E6C200;
+}
+.coklat{
+  background:#E8C1A0;
+  border-color:#B87333;
+}
+
+/* MIX → ATAS BAWAH (VERTIKAL) */
+.mix{
+  background:linear-gradient(to bottom,#FFF3B0 50%,#E8C1A0 50%);
+  border-color:#C9A24D;
+}
+
+/* ALL VARIAN → WARNA-WARNI MUDA */
+.all{
+  background:linear-gradient(
+    90deg,
+    #FFD6D6,
+    #FFF3B0,
+    #D6F5D6,
+    #D6E4FF,
+    #F0D6FF
+  );
+  border-color:#C5C5C5;
+}
+
+/* OPSI UANG PEMBELI */
+.bayar-btn{
+  background:#E0E0E0;
+  color:#000;
+  border:2px solid #BDBDBD;
+}
+.bayar-btn:active{background:#D5D5D5}
+
+/* ACTION */
 .action-bar{display:flex;gap:10px;margin-top:15px}
 .action-bar button{
-  flex:1;
-  background:#eee;
-  border:1px solid #ccc;
-  padding:12px;
-  border-radius:12px;
-  font-weight:bold;
+  flex:1;background:#eee;border:1px solid #ccc;
+  padding:12px;border-radius:12px;font-weight:bold;
 }
 
+/* KERANJANG */
 .cart-list{
-  background:#f1f1f1;
-  border-radius:12px;
-  padding:10px;
-  font-size:14px;
+  background:#f1f1f1;border-radius:12px;
+  padding:10px;font-size:14px;
 }
 .cart-item{
-  display:flex;
-  justify-content:space-between;
-  border-bottom:1px dashed #ccc;
-  padding:4px 0;
+  display:flex;justify-content:space-between;
+  border-bottom:1px dashed #ccc;padding:4px 0;
 }
 
 .undo-btn{
-  margin-top:8px;
-  width:100%;
-  background:#f9f9f9;
-  border:1px dashed #999;
-  padding:10px;
-  border-radius:10px;
-  font-weight:bold;
+  margin-top:8px;width:100%;
+  background:#f9f9f9;border:1px dashed #999;
+  padding:10px;border-radius:10px;font-weight:bold;
 }
 
+/* TABEL */
 table{width:100%;border-collapse:collapse;margin-top:20px;font-size:12px}
 th,td{border:1px solid #ddd;padding:6px;text-align:center}
 th{background:#eee}
+
+/* AKSI */
+.aksi-btn{
+  font-size:11px;padding:4px 6px;margin:2px;
+  border-radius:6px;border:1px solid #ccc;
+  cursor:pointer;
+}
+.hapus{color:red}
 </style>
 </head>
 
@@ -69,48 +111,45 @@ th{background:#eee}
 <div class="container">
 
 <h1>Kasir Jasuke.id</h1>
-
 <div id="totalBox" class="total-box">Total Masuk: Rp0</div>
 
 <h2>Cup Kecil</h2>
 <div class="grid">
-<button class="item-btn" onclick="tambahItem('Jasuke Full Keju',5000)">Keju 5k</button>
-<button class="item-btn" onclick="tambahItem('Jasuco Full Coklat',5000)">Coklat 5k</button>
-<button class="item-btn" onclick="tambahItem('Mix Coklat Keju',7000)">Mix 7k</button>
-<button class="item-btn" onclick="tambahItem('All Varian',8000)">All 8k</button>
+<button class="item-btn keju" onclick="tambahItem('Jasuke Full Keju',5000)">Keju 5k</button>
+<button class="item-btn coklat" onclick="tambahItem('Jasuco Full Coklat',5000)">Coklat 5k</button>
+<button class="item-btn mix" onclick="tambahItem('Mix Coklat Keju',7000)">Mix 7k</button>
+<button class="item-btn all" onclick="tambahItem('All Varian',8000)">All 8k</button>
 </div>
 
 <h2>Cup Sedang</h2>
 <div class="grid">
-<button class="item-btn" onclick="tambahItem('Jasuke Full Keju',10000)">Keju 10k</button>
-<button class="item-btn" onclick="tambahItem('Jasuco Full Coklat',10000)">Coklat 10k</button>
-<button class="item-btn" onclick="tambahItem('Mix Coklat Keju',12000)">Mix 12k</button>
-<button class="item-btn" onclick="tambahItem('All Varian',12000)">All 12k</button>
+<button class="item-btn keju" onclick="tambahItem('Jasuke Full Keju',10000)">Keju 10k</button>
+<button class="item-btn coklat" onclick="tambahItem('Jasuco Full Coklat',10000)">Coklat 10k</button>
+<button class="item-btn mix" onclick="tambahItem('Mix Coklat Keju',12000)">Mix 12k</button>
+<button class="item-btn all" onclick="tambahItem('All Varian',12000)">All 12k</button>
 </div>
 
 <h2>Cup Super Besar</h2>
 <div class="grid">
-<button class="item-btn" onclick="tambahItem('Jasuke Full Keju',15000)">Keju 15k</button>
-<button class="item-btn" onclick="tambahItem('Jasuco Full Coklat',15000)">Coklat 15k</button>
-<button class="item-btn" onclick="tambahItem('Mix Coklat Keju',17000)">Mix 17k</button>
-<button class="item-btn" onclick="tambahItem('All Varian',17000)">All 17k</button>
+<button class="item-btn keju" onclick="tambahItem('Jasuke Full Keju',15000)">Keju 15k</button>
+<button class="item-btn coklat" onclick="tambahItem('Jasuco Full Coklat',15000)">Coklat 15k</button>
+<button class="item-btn mix" onclick="tambahItem('Mix Coklat Keju',17000)">Mix 17k</button>
+<button class="item-btn all" onclick="tambahItem('All Varian',17000)">All 17k</button>
 </div>
 
 <h2>Keranjang Pembeli</h2>
 <div class="cart-list" id="cartList">Belum ada pesanan</div>
 
 <button class="undo-btn" onclick="undoKeranjang()">↩️ Undo Pesanan Terakhir</button>
-
 <div id="cartTotal" class="total-box" style="background:#2196F3;margin-top:10px">Total: Rp0</div>
 
-<!-- OPSI UANG PEMBELI -->
 <div class="grid">
-<button class="item-btn" onclick="setBayar(0)">Uang Pas</button>
-<button class="item-btn" onclick="setBayar(10000)">Rp10.000</button>
-<button class="item-btn" onclick="setBayar(20000)">Rp20.000</button>
-<button class="item-btn" onclick="setBayar(50000)">Rp50.000</button>
-<button class="item-btn" onclick="setBayar(100000)">Rp100.000</button>
-<button class="item-btn" onclick="setBayarLain()">Lainnya</button>
+<button class="item-btn bayar-btn" onclick="setBayar(0)">Uang Pas</button>
+<button class="item-btn bayar-btn" onclick="setBayar(10000)">Rp10.000</button>
+<button class="item-btn bayar-btn" onclick="setBayar(20000)">Rp20.000</button>
+<button class="item-btn bayar-btn" onclick="setBayar(50000)">Rp50.000</button>
+<button class="item-btn bayar-btn" onclick="setBayar(100000)">Rp100.000</button>
+<button class="item-btn bayar-btn" onclick="setBayarLain()">Lainnya</button>
 </div>
 
 <div class="action-bar">
@@ -121,11 +160,7 @@ th{background:#eee}
 <table>
 <thead>
 <tr>
-<th>No</th>
-<th>Pesanan</th>
-<th>Total</th>
-<th>Bayar</th>
-<th>Kembali</th>
+<th>No</th><th>Pesanan</th><th>Total</th><th>Bayar</th><th>Kembali</th><th>Aksi</th>
 </tr>
 </thead>
 <tbody id="data"></tbody>
@@ -139,107 +174,37 @@ let keranjang = [];
 let historyKeranjang = [];
 let uangPembeli = 0;
 
-function simpanHistory(){
-  historyKeranjang.push(JSON.stringify(keranjang));
-}
-
-function tambahItem(nama,harga){
-  simpanHistory();
-  keranjang.push({nama,harga});
-  renderKeranjang();
-}
-
-function undoKeranjang(){
-  if(historyKeranjang.length){
-    keranjang = JSON.parse(historyKeranjang.pop());
-    renderKeranjang();
-  }else{
-    alert('Tidak ada yang bisa di-undo');
-  }
-}
-
+function simpanHistory(){historyKeranjang.push(JSON.stringify(keranjang));}
+function tambahItem(nama,harga){simpanHistory();keranjang.push({nama,harga});renderKeranjang();}
+function undoKeranjang(){historyKeranjang.length?keranjang=JSON.parse(historyKeranjang.pop()):alert('Tidak ada yang bisa di-undo');renderKeranjang();}
 function renderKeranjang(){
-  const list = document.getElementById('cartList');
-  if(keranjang.length===0){
-    list.innerHTML='Belum ada pesanan';
-  }else{
-    list.innerHTML = keranjang.map(i =>
-      `<div class="cart-item">
-        <span>${i.nama}</span>
-        <span>Rp${i.harga}</span>
-      </div>`
-    ).join('');
-  }
-  const total = keranjang.reduce((a,b)=>a+b.harga,0);
-  document.getElementById('cartTotal').innerText='Total: Rp'+total;
+  cartList.innerHTML=keranjang.length?keranjang.map(i=>`<div class="cart-item"><span>${i.nama}</span><span>Rp${i.harga}</span></div>`).join(''):'Belum ada pesanan';
+  cartTotal.innerText='Total: Rp'+keranjang.reduce((a,b)=>a+b.harga,0);
 }
-
-function setBayar(uang){
-  const total = keranjang.reduce((a,b)=>a+b.harga,0);
-  uangPembeli = uang===0 ? total : uang;
-}
-
-function setBayarLain(){
-  const input = prompt('Masukkan uang pembeli (angka saja)');
-  const uang = parseInt(input);
-  if(!isNaN(uang) && uang > 0){
-    uangPembeli = uang;
-  }else{
-    alert('Nominal tidak valid');
-  }
-}
-
+function setBayar(u){uangPembeli=u===0?keranjang.reduce((a,b)=>a+b.harga,0):u;}
+function setBayarLain(){const u=parseInt(prompt('Masukkan uang pembeli'));if(!isNaN(u)&&u>0)uangPembeli=u;}
 function simpanTransaksi(){
-  if(!keranjang.length) return alert('Keranjang kosong');
-
-  const total = keranjang.reduce((a,b)=>a+b.harga,0);
-
-  if(uangPembeli < total){
-    alert('Uang pembeli kurang');
-    return;
-  }
-
-  transaksi.push({
-    menu: keranjang.map(i=>i.nama).join(', '),
-    total,
-    bayar: uangPembeli,
-    kembali: uangPembeli-total
-  });
-
-  keranjang=[]; uangPembeli=0; historyKeranjang=[];
+  if(!keranjang.length)return alert('Keranjang kosong');
+  const t=keranjang.reduce((a,b)=>a+b.harga,0);
+  if(uangPembeli<t)return alert('Uang pembeli kurang');
+  transaksi.push({menu:keranjang.map(i=>i.nama).join(', '),total:t,bayar:uangPembeli,kembali:uangPembeli-t});
+  keranjang=[];uangPembeli=0;historyKeranjang=[];
   localStorage.setItem('kasirJagung',JSON.stringify(transaksi));
-  renderKeranjang(); render();
+  renderKeranjang();render();
 }
-
 function render(){
-  let tbody=document.getElementById('data');
-  tbody.innerHTML='';
-  let totalMasuk=0;
-
+  data.innerHTML='';let totalMasuk=0;
   transaksi.forEach((t,i)=>{
     totalMasuk+=t.total;
-    tbody.innerHTML+=`
-    <tr>
-      <td>${i+1}</td>
-      <td>${t.menu}</td>
-      <td>Rp${t.total}</td>
-      <td>Rp${t.bayar}</td>
-      <td>Rp${t.kembali}</td>
-    </tr>`;
+    data.innerHTML+=`<tr><td>${i+1}</td><td>${t.menu}</td><td>Rp${t.total}</td><td>Rp${t.bayar}</td><td>Rp${t.kembali}</td><td>${i===transaksi.length-1?'<button class="aksi-btn" onclick="editTerakhir()">✏️</button><button class="aksi-btn hapus" onclick="hapusTerakhir()">🗑️</button>':'-'}</td></tr>`;
   });
-
-  document.getElementById('totalBox').innerText='Total Masuk: Rp'+totalMasuk;
+  totalBox.innerText='Total Masuk: Rp'+totalMasuk;
 }
-
-function clearAll(){
-  if(confirm('Hapus semua transaksi?')){
-    transaksi=[];
-    localStorage.removeItem('kasirJagung');
-    render();
-  }
-}
-
+function editTerakhir(){const t=transaksi.at(-1);const b=parseInt(prompt('Edit uang bayar',t.bayar));if(!isNaN(b)&&b>=t.total){t.bayar=b;t.kembali=b-t.total;localStorage.setItem('kasirJagung',JSON.stringify(transaksi));render();}}
+function hapusTerakhir(){if(confirm('Hapus transaksi terakhir?')){transaksi.pop();localStorage.setItem('kasirJagung',JSON.stringify(transaksi));render();}}
+function clearAll(){if(confirm('Hapus semua transaksi?')){transaksi=[];localStorage.removeItem('kasirJagung');render();}}
 render();
 </script>
+
 </body>
 </html>

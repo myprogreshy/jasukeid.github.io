@@ -114,26 +114,26 @@ th{background:#eee}
 
 <h2>Cup Kecil</h2>
 <div class="grid">
-<button class="item-btn keju" onclick="tambahItem('Jasuke Full Keju',5000)">Keju 5k</button>
-<button class="item-btn coklat" onclick="tambahItem('Jasuco Full Coklat',5000)">Coklat 5k</button>
-<button class="item-btn mix" onclick="tambahItem('Mix Coklat Keju',7000)">Mix 7k</button>
-<button class="item-btn all" onclick="tambahItem('All Varian',8000)">All 8k</button>
+<button class="item-btn keju" onclick="tambahItem('Jasuke Full Keju','k',5000)">Keju 5k</button>
+<button class="item-btn coklat" onclick="tambahItem('Jasuco Full Coklat','k',5000)">Coklat 5k</button>
+<button class="item-btn mix" onclick="tambahItem('Mix Coklat Keju','k',7000)">Mix 7k</button>
+<button class="item-btn all" onclick="tambahItem('All Varian','k',8000)">All 8k</button>
 </div>
 
 <h2>Cup Sedang</h2>
 <div class="grid">
-<button class="item-btn keju" onclick="tambahItem('Jasuke Full Keju',10000)">Keju 10k</button>
-<button class="item-btn coklat" onclick="tambahItem('Jasuco Full Coklat',10000)">Coklat 10k</button>
-<button class="item-btn mix" onclick="tambahItem('Mix Coklat Keju',12000)">Mix 12k</button>
-<button class="item-btn all" onclick="tambahItem('All Varian',12000)">All 12k</button>
+<button class="item-btn keju" onclick="tambahItem('Jasuke Full Keju','b',10000)">Keju 10k</button>
+<button class="item-btn coklat" onclick="tambahItem('Jasuco Full Coklat','b',10000)">Coklat 10k</button>
+<button class="item-btn mix" onclick="tambahItem('Mix Coklat Keju','b',12000)">Mix 12k</button>
+<button class="item-btn all" onclick="tambahItem('All Varian','b',12000)">All 12k</button>
 </div>
 
 <h2>Cup Super Besar</h2>
 <div class="grid">
-<button class="item-btn keju" onclick="tambahItem('Jasuke Full Keju',15000)">Keju 15k</button>
-<button class="item-btn coklat" onclick="tambahItem('Jasuco Full Coklat',15000)">Coklat 15k</button>
-<button class="item-btn mix" onclick="tambahItem('Mix Coklat Keju',17000)">Mix 17k</button>
-<button class="item-btn all" onclick="tambahItem('All Varian',17000)">All 17k</button>
+<button class="item-btn keju" onclick="tambahItem('Jasuke Full Keju','s',15000)">Keju 15k</button>
+<button class="item-btn coklat" onclick="tambahItem('Jasuco Full Coklat','s',15000)">Coklat 15k</button>
+<button class="item-btn mix" onclick="tambahItem('Mix Coklat Keju','s',17000)">Mix 17k</button>
+<button class="item-btn all" onclick="tambahItem('All Varian','s',17000)">All 17k</button>
 </div>
 
 <h2>Keranjang Pembeli</h2>
@@ -180,10 +180,24 @@ function resetBayar(){
 }
 
 function simpanHistory(){historyKeranjang.push(JSON.stringify(keranjang));}
-function tambahItem(nama,harga){simpanHistory();keranjang.push({nama,harga});renderKeranjang();}
-function undoKeranjang(){historyKeranjang.length?keranjang=JSON.parse(historyKeranjang.pop()):alert('Tidak ada yang bisa di-undo');renderKeranjang();}
+
+function tambahItem(nama,ukuran,harga){
+  simpanHistory();
+  keranjang.push({nama:`${nama}(${ukuran})`,harga});
+  renderKeranjang();
+}
+
+function undoKeranjang(){
+  historyKeranjang.length
+  ? keranjang=JSON.parse(historyKeranjang.pop())
+  : alert('Tidak ada yang bisa di-undo');
+  renderKeranjang();
+}
+
 function renderKeranjang(){
-  cartList.innerHTML=keranjang.length?keranjang.map(i=>`<div class="cart-item"><span>${i.nama}</span><span>Rp${i.harga}</span></div>`).join(''):'Belum ada pesanan';
+  cartList.innerHTML=keranjang.length
+  ? keranjang.map(i=>`<div class="cart-item"><span>${i.nama}</span><span>Rp${i.harga}</span></div>`).join('')
+  : 'Belum ada pesanan';
   cartTotal.innerText='Total: Rp'+keranjang.reduce((a,b)=>a+b.harga,0);
 }
 
@@ -206,7 +220,10 @@ function simpanTransaksi(){
   if(!keranjang.length)return alert('Keranjang kosong');
   const t=keranjang.reduce((a,b)=>a+b.harga,0);
   if(uangPembeli<t)return alert('Uang pembeli kurang');
-  transaksi.push({menu:keranjang.map(i=>i.nama).join(', '),total:t,bayar:uangPembeli,kembali:uangPembeli-t});
+  transaksi.push({
+    menu:keranjang.map(i=>i.nama).join(', '),
+    total:t,bayar:uangPembeli,kembali:uangPembeli-t
+  });
   keranjang=[];uangPembeli=0;historyKeranjang=[];
   resetBayar();
   localStorage.setItem('kasirJagung',JSON.stringify(transaksi));
@@ -217,7 +234,18 @@ function render(){
   data.innerHTML='';let totalMasuk=0;
   transaksi.forEach((t,i)=>{
     totalMasuk+=t.total;
-    data.innerHTML+=`<tr><td>${i+1}</td><td>${t.menu}</td><td>Rp${t.total}</td><td>Rp${t.bayar}</td><td>Rp${t.kembali}</td><td>${i===transaksi.length-1?'<button class="aksi-btn" onclick="editTerakhir()">✏️</button><button class="aksi-btn hapus" onclick="hapusTerakhir()">🗑️</button>':'-'}</td></tr>`;
+    data.innerHTML+=`
+    <tr>
+      <td>${i+1}</td>
+      <td>${t.menu}</td>
+      <td>Rp${t.total}</td>
+      <td>Rp${t.bayar}</td>
+      <td>Rp${t.kembali}</td>
+      <td>${i===transaksi.length-1
+        ?'<button class="aksi-btn" onclick="editTerakhir()">✏️</button><button class="aksi-btn hapus" onclick="hapusTerakhir()">🗑️</button>'
+        :'-'}
+      </td>
+    </tr>`;
   });
   totalBox.innerText='Total Masuk: Rp'+totalMasuk;
 }
@@ -235,9 +263,29 @@ function exportCSV(){
   a.click();
 }
 
-function editTerakhir(){const t=transaksi.at(-1);const b=parseInt(prompt('Edit uang bayar',t.bayar));if(!isNaN(b)&&b>=t.total){t.bayar=b;t.kembali=b-t.total;localStorage.setItem('kasirJagung',JSON.stringify(transaksi));render();}}
-function hapusTerakhir(){if(confirm('Hapus transaksi terakhir?')){transaksi.pop();localStorage.setItem('kasirJagung',JSON.stringify(transaksi));render();}}
-function clearAll(){if(confirm('Hapus semua transaksi?')){transaksi=[];localStorage.removeItem('kasirJagung');render();}}
+function editTerakhir(){
+  const t=transaksi.at(-1);
+  const b=parseInt(prompt('Edit uang bayar',t.bayar));
+  if(!isNaN(b)&&b>=t.total){
+    t.bayar=b;t.kembali=b-t.total;
+    localStorage.setItem('kasirJagung',JSON.stringify(transaksi));
+    render();
+  }
+}
+function hapusTerakhir(){
+  if(confirm('Hapus transaksi terakhir?')){
+    transaksi.pop();
+    localStorage.setItem('kasirJagung',JSON.stringify(transaksi));
+    render();
+  }
+}
+function clearAll(){
+  if(confirm('Hapus semua transaksi?')){
+    transaksi=[];
+    localStorage.removeItem('kasirJagung');
+    render();
+  }
+}
 render();
 </script>
 

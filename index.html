@@ -33,31 +33,14 @@ h2{margin-top:20px;font-size:18px}
 .item-btn:active{opacity:.85}
 
 /* WARNA CUP */
-.keju{
-  background:#FFF3B0;
-  border-color:#E6C200;
-}
-.coklat{
-  background:#E8C1A0;
-  border-color:#B87333;
-}
-
-/* MIX → ATAS BAWAH (VERTIKAL) */
+.keju{background:#FFF3B0;border-color:#E6C200}
+.coklat{background:#E8C1A0;border-color:#B87333}
 .mix{
   background:linear-gradient(to bottom,#FFF3B0 50%,#E8C1A0 50%);
   border-color:#C9A24D;
 }
-
-/* ALL VARIAN → WARNA-WARNI MUDA */
 .all{
-  background:linear-gradient(
-    90deg,
-    #FFD6D6,
-    #FFF3B0,
-    #D6F5D6,
-    #D6E4FF,
-    #F0D6FF
-  );
+  background:linear-gradient(90deg,#FFD6D6,#FFF3B0,#D6F5D6,#D6E4FF,#F0D6FF);
   border-color:#C5C5C5;
 }
 
@@ -67,7 +50,11 @@ h2{margin-top:20px;font-size:18px}
   color:#000;
   border:2px solid #BDBDBD;
 }
-.bayar-btn:active{background:#D5D5D5}
+.bayar-btn.active-bayar{
+  background:#4CAF50;
+  color:#fff;
+  border-color:#388E3C;
+}
 
 /* ACTION */
 .action-bar{display:flex;gap:10px;margin-top:15px}
@@ -104,6 +91,18 @@ th{background:#eee}
   cursor:pointer;
 }
 .hapus{color:red}
+
+/* EXPORT */
+.export-btn{
+  margin-top:10px;
+  width:100%;
+  background:#2196F3;
+  color:white;
+  border:none;
+  padding:12px;
+  border-radius:12px;
+  font-weight:bold;
+}
 </style>
 </head>
 
@@ -139,17 +138,17 @@ th{background:#eee}
 
 <h2>Keranjang Pembeli</h2>
 <div class="cart-list" id="cartList">Belum ada pesanan</div>
-
 <button class="undo-btn" onclick="undoKeranjang()">↩️ Undo Pesanan Terakhir</button>
+
 <div id="cartTotal" class="total-box" style="background:#2196F3;margin-top:10px">Total: Rp0</div>
 
 <div class="grid">
-<button class="item-btn bayar-btn" onclick="setBayar(0)">Uang Pas</button>
-<button class="item-btn bayar-btn" onclick="setBayar(10000)">Rp10.000</button>
-<button class="item-btn bayar-btn" onclick="setBayar(20000)">Rp20.000</button>
-<button class="item-btn bayar-btn" onclick="setBayar(50000)">Rp50.000</button>
-<button class="item-btn bayar-btn" onclick="setBayar(100000)">Rp100.000</button>
-<button class="item-btn bayar-btn" onclick="setBayarLain()">Lainnya</button>
+<button class="item-btn bayar-btn" onclick="setBayar(0,this)">Uang Pas</button>
+<button class="item-btn bayar-btn" onclick="setBayar(10000,this)">Rp10.000</button>
+<button class="item-btn bayar-btn" onclick="setBayar(20000,this)">Rp20.000</button>
+<button class="item-btn bayar-btn" onclick="setBayar(50000,this)">Rp50.000</button>
+<button class="item-btn bayar-btn" onclick="setBayar(100000,this)">Rp100.000</button>
+<button class="item-btn bayar-btn" onclick="setBayarLain(this)">Lainnya</button>
 </div>
 
 <div class="action-bar">
@@ -166,6 +165,8 @@ th{background:#eee}
 <tbody id="data"></tbody>
 </table>
 
+<button class="export-btn" onclick="exportCSV()">💾 Export Riwayat (CSV)</button>
+
 </div>
 
 <script>
@@ -174,6 +175,10 @@ let keranjang = [];
 let historyKeranjang = [];
 let uangPembeli = 0;
 
+function resetBayar(){
+  document.querySelectorAll('.bayar-btn').forEach(b=>b.classList.remove('active-bayar'));
+}
+
 function simpanHistory(){historyKeranjang.push(JSON.stringify(keranjang));}
 function tambahItem(nama,harga){simpanHistory();keranjang.push({nama,harga});renderKeranjang();}
 function undoKeranjang(){historyKeranjang.length?keranjang=JSON.parse(historyKeranjang.pop()):alert('Tidak ada yang bisa di-undo');renderKeranjang();}
@@ -181,17 +186,33 @@ function renderKeranjang(){
   cartList.innerHTML=keranjang.length?keranjang.map(i=>`<div class="cart-item"><span>${i.nama}</span><span>Rp${i.harga}</span></div>`).join(''):'Belum ada pesanan';
   cartTotal.innerText='Total: Rp'+keranjang.reduce((a,b)=>a+b.harga,0);
 }
-function setBayar(u){uangPembeli=u===0?keranjang.reduce((a,b)=>a+b.harga,0):u;}
-function setBayarLain(){const u=parseInt(prompt('Masukkan uang pembeli'));if(!isNaN(u)&&u>0)uangPembeli=u;}
+
+function setBayar(u,el){
+  resetBayar();
+  el.classList.add('active-bayar');
+  uangPembeli=u===0?keranjang.reduce((a,b)=>a+b.harga,0):u;
+}
+
+function setBayarLain(el){
+  const u=parseInt(prompt('Masukkan uang pembeli'));
+  if(!isNaN(u)&&u>0){
+    resetBayar();
+    el.classList.add('active-bayar');
+    uangPembeli=u;
+  }
+}
+
 function simpanTransaksi(){
   if(!keranjang.length)return alert('Keranjang kosong');
   const t=keranjang.reduce((a,b)=>a+b.harga,0);
   if(uangPembeli<t)return alert('Uang pembeli kurang');
   transaksi.push({menu:keranjang.map(i=>i.nama).join(', '),total:t,bayar:uangPembeli,kembali:uangPembeli-t});
   keranjang=[];uangPembeli=0;historyKeranjang=[];
+  resetBayar();
   localStorage.setItem('kasirJagung',JSON.stringify(transaksi));
   renderKeranjang();render();
 }
+
 function render(){
   data.innerHTML='';let totalMasuk=0;
   transaksi.forEach((t,i)=>{
@@ -200,6 +221,20 @@ function render(){
   });
   totalBox.innerText='Total Masuk: Rp'+totalMasuk;
 }
+
+function exportCSV(){
+  if(!transaksi.length)return alert('Tidak ada data');
+  let csv='No,Pesanan,Total,Bayar,Kembali\n';
+  transaksi.forEach((t,i)=>{
+    csv+=`${i+1},"${t.menu}",${t.total},${t.bayar},${t.kembali}\n`;
+  });
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='riwayat_kasir.csv';
+  a.click();
+}
+
 function editTerakhir(){const t=transaksi.at(-1);const b=parseInt(prompt('Edit uang bayar',t.bayar));if(!isNaN(b)&&b>=t.total){t.bayar=b;t.kembali=b-t.total;localStorage.setItem('kasirJagung',JSON.stringify(transaksi));render();}}
 function hapusTerakhir(){if(confirm('Hapus transaksi terakhir?')){transaksi.pop();localStorage.setItem('kasirJagung',JSON.stringify(transaksi));render();}}
 function clearAll(){if(confirm('Hapus semua transaksi?')){transaksi=[];localStorage.removeItem('kasirJagung');render();}}

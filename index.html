@@ -3,178 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Kuis Kosakata</title>
+    <title>Quiz Bahasa Jepang</title>
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f6f8fb;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
         }
-        .card {
+
+        .quiz-container {
+            width: 100%;
+            max-width: 420px;
             background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        h1 {
             text-align: center;
-            width: 350px;
+            margin-top: 0;
         }
-        .hidden { display: none !important; }
-        button {
-            background-color: #007bff;
-            color: white;
+
+        .question {
+            text-align: center;
+            font-size: 38px;
+            font-weight: bold;
+            margin: 30px 0 15px;
+        }
+
+        .meaning {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .audio-button {
+            display: block;
+            margin: 0 auto 25px;
             border: none;
-            padding: 12px 24px;
+            background: #2c7be5;
+            color: white;
+            padding: 13px 25px;
+            border-radius: 10px;
             font-size: 16px;
-            border-radius: 6px;
             cursor: pointer;
-            transition: background 0.2s;
-            margin: 5px;
         }
-        button:hover { background-color: #0056b3; }
-        .audio-btn { background-color: #28a745; }
-        .audio-btn:hover { background-color: #218838; }
-        .opsi-container {
+
+        .audio-button:hover {
+            opacity: 0.9;
+        }
+
+        .answers {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
+        }
+
+        .answer {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .answer:hover {
+            background: #f1f5ff;
+        }
+
+        .result {
+            text-align: center;
             margin-top: 20px;
-        }
-        .opsi-btn {
-            background-color: #f8f9fa;
-            color: #333;
-            border: 2px solid #dee2e6;
-        }
-        .opsi-btn:hover { background-color: #e2e6ea; }
-        #kata-tampilan {
-            font-size: 32px;
             font-weight: bold;
-            color: #222;
-            margin: 20px 0;
+            min-height: 25px;
+        }
+
+        .next-button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #222;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: none;
         }
     </style>
 </head>
+
 <body>
 
-    <div class="card">
-        <!-- Halaman Mulai (Penting untuk melewati blokir Autoplay Browser) -->
-        <div id="layar-mulai">
-            <h2>Game Kuis Kosakata</h2>
-            <p>Dengarkan audio dan tebak artinya!</p>
-            <button id="btn-mulai">Mulai Game</button>
-        </div>
+<div class="quiz-container">
 
-        <!-- Halaman Kuis Utama -->
-        <div id="layar-kuis" class="hidden">
-            <div id="info-progres">Pertanyaan 1/2</div>
-            <div id="kata-tampilan">...</div>
-            
-            <button class="audio-btn" id="btn-suara">🔊 Putar Ulang Suara</button>
-            
-            <div class="opsi-container" id="kontainer-pilihan">
-                <!-- Tombol pilihan jawaban akan muncul di sini via JS -->
-            </div>
-        </div>
+    <h1>Quiz Bahasa Jepang</h1>
 
-        <!-- Halaman Skor Akhir -->
-        <div id="layar-selesai" class="hidden">
-            <h2>Kuis Selesai!</h2>
-            <p id="skor-akhir">Skor Anda: 0</p>
-            <button onclick="location.reload()">Main Lagi</button>
-        </div>
+    <div class="question">
+        じてんしゃ
     </div>
 
-    <script>
-        // DATA KUIS - Silakan ganti URL audio dengan URL GitHub Raw milik Anda sendiri
-        const daftarKuis = [
-            {
-                kata: "Apple",
-                jawabanBenar: "Apel",
-                pilihan: ["Apel", "Buku", "Kucing", "Meja"],
-                audioUrl: "https://githubusercontent.com"
-            },
-            {
-                kata: "Book",
-                jawabanBenar: "Buku",
-                pilihan: ["Mobil", "Buku", "Pinsil", "Rumah"],
-                audioUrl: "https://githubusercontent.com"
-            }
-        ];
+    <div class="meaning">
+        Dengarkan audio lalu pilih arti yang benar.
+    </div>
 
-        let indeksSekarang = 0;
-        let skor = 0;
-        let audioSekarang = null;
+    <button class="audio-button" onclick="putarAudio()">
+        🔊 Dengarkan
+    </button>
 
-        const layarMulai = document.getElementById('layar-mulai');
-        const layarKuis = document.getElementById('layar-kuis');
-        const layarSelesai = document.getElementById('layar-selesai');
-        
-        // Memulai Game setelah tombol diklik (Lolos kebijakan autoplay)
-        document.getElementById('btn-mulai').addEventListener('click', () => {
-            layarMulai.classList.add('hidden');
-            layarKuis.classList.remove('hidden');
-            tampilkanKuis();
+    <audio id="audioJepang" preload="auto">
+        <source src="じてんしゃ.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="answers">
+
+        <button class="answer" onclick="jawab(1)">
+            A. Mobil
+        </button>
+
+        <button class="answer" onclick="jawab(2)">
+            B. Sepeda
+        </button>
+
+        <button class="answer" onclick="jawab(3)">
+            C. Kereta
+        </button>
+
+        <button class="answer" onclick="jawab(4)">
+            D. Pesawat
+        </button>
+
+    </div>
+
+    <div id="result" class="result"></div>
+
+    <button id="nextButton" class="next-button" onclick="soalBerikutnya()">
+        Soal Berikutnya
+    </button>
+
+</div>
+
+
+<script>
+
+    // ==========================
+    // AUDIO
+    // ==========================
+
+    const audioJepang = document.getElementById("audioJepang");
+
+    function putarAudio() {
+
+        audioJepang.currentTime = 0;
+
+        audioJepang.play().catch(function(error) {
+            console.log("Audio tidak dapat diputar:", error);
         });
 
-        function tampilkanKuis() {
-            const data = daftarKuis[indeksSekarang];
-            
-            // Perbarui info teks UI
-            document.getElementById('info-progres').innerText = `Pertanyaan ${indeksSekarang + 1}/${daftarKuis.length}`;
-            document.getElementById('kata-tampilan').innerText = data.kata;
+    }
 
-            // Bersihkan pilihan jawaban lama
-            const kontainerPilihan = document.getElementById('kontainer-pilihan');
-            kontainerPilihan.innerHTML = '';
 
-            // Buat tombol opsi pilihan secara dinamis
-            data.pilihan.forEach(opsi => {
-                const btn = document.createElement('button');
-                btn.className = 'opsi-btn';
-                btn.innerText = opsi;
-                btn.onclick = () => cekJawaban(opsi);
-                kontainerPilihan.appendChild(btn);
-            });
+    // ==========================
+    // JAWABAN
+    // ==========================
 
-            // PUTAR AUDIO OTOMATIS
-            mainkanAudio(data.audioUrl);
+    function jawab(pilihan) {
+
+        const result = document.getElementById("result");
+        const nextButton = document.getElementById("nextButton");
+
+        // Jawaban yang benar adalah B
+        if (pilihan === 2) {
+
+            result.textContent = "✓ Benar! じてんしゃ berarti sepeda.";
+
+        } else {
+
+            result.textContent = "✗ Salah. Jawaban yang benar adalah B. Sepeda.";
+
         }
 
-        function mainkanAudio(url) {
-            if (audioSekarang) {
-                audioSekarang.pause(); // Hentikan audio sebelumnya jika ada
-            }
-            audioSekarang = new Audio(url);
-            audioSekarang.play().catch(e => console.log("Autoplay diblokir browser sebelum ada interaksi."));
-        }
+        // Matikan semua tombol setelah menjawab
+        const buttons = document.querySelectorAll(".answer");
 
-        // Tombol Putar Ulang Audio manual jika pengguna ingin dengar lagi
-        document.getElementById('btn-suara').addEventListener('click', () => {
-            if(audioSekarang) {
-                audioSekarang.currentTime = 0; // Ulang dari detik ke-0
-                audioSekarang.play();
-            }
+        buttons.forEach(function(button) {
+            button.disabled = true;
+            button.style.cursor = "default";
         });
 
-        function cekJawaban(jawabanTerpilih) {
-            const data = daftarKuis[indeksSekarang];
-            if (jawabanTerpilih === data.jawabanBenar) {
-                skor += 50; // Tambah skor jika benar
-            }
+        nextButton.style.display = "block";
+    }
 
-            // Lanjut ke soal berikutnya atau selesai
-            if (indeksSekarang < daftarKuis.length - 1) {
-                indeksSekarang++;
-                tampilkanKuis();
-            } else {
-                layarKuis.classList.add('hidden');
-                layarSelesai.classList.remove('hidden');
-                document.getElementById('skor-akhir').innerText = `Skor Akhir Anda: ${skor}`;
-            }
-        }
-    </script>
+
+    // ==========================
+    // SOAL BERIKUTNYA
+    // ==========================
+
+    function soalBerikutnya() {
+
+        alert("Nanti di sini bisa dimasukkan soal berikutnya.");
+
+    }
+
+</script>
+
 </body>
 </html>
